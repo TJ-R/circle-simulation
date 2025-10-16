@@ -103,13 +103,13 @@ class Ball : public sf::CircleShape {
 		}
 
 		void update(sf::RenderWindow* window, Ball* ballArr[], int ballArrSize) {
-			// Calculate update to ball here	
 			float currentX = this->getPosition().x;
 			float currentY = this->getPosition().y;
 			
-			// TODO refactor collision logic
-
 			this->checkBorderCollision(window);
+
+			// TODO update collision between balls	
+
 			this->move(this->getMovementVector());
 			this->AABB_Collider.move(this->getMovementVector());
 
