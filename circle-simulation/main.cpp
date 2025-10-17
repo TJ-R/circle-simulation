@@ -58,8 +58,8 @@ class Ball : public sf::CircleShape {
 			collider.setPosition(this->getPosition());
 
 			// Random Movement Vector
-			float xSpeed = static_cast<float>(5 + (rand() % (10 - 5 + 1)));
-			float ySpeed = static_cast<float>(5 + (rand() % (10 - 5 + 1)));
+			float xSpeed = static_cast<float>(500 + (rand() % (750 - 500 + 1)));
+			float ySpeed = static_cast<float>(500 + (rand() % (750 - 500 + 1)));
 			this->setMovementVector(sf::Vector2f(xSpeed, ySpeed));
 
 			// Set the AABB collider box
@@ -102,7 +102,7 @@ class Ball : public sf::CircleShape {
 			}
 		}
 
-		void update(sf::RenderWindow* window, Ball* ballArr[], int ballArrSize) {
+		void update(sf::RenderWindow* window, Ball* ballArr[], int ballArrSize, float dt) {
 			float currentX = this->getPosition().x;
 			float currentY = this->getPosition().y;
 			
@@ -110,8 +110,8 @@ class Ball : public sf::CircleShape {
 
 			// TODO update collision between balls	
 
-			this->move(this->getMovementVector());
-			this->AABB_Collider.move(this->getMovementVector());
+			this->move(this->getMovementVector() * dt);
+			this->AABB_Collider.move(this->getMovementVector() * dt);
 
 			
 			//bool collision = false;
@@ -170,13 +170,16 @@ class Ball : public sf::CircleShape {
 using namespace std;
 int main() {
 	sf::RenderWindow window(sf::VideoMode({ 1200, 900 }), "SFML works!");
-	float speed = 3.f;
+	sf::Clock clock;
+
+	float dt = clock.restart().asSeconds();
+	float speed = 200.f;
 
 	Ball* circleArr[6];
 	int circleArrSize = sizeof(circleArr) / sizeof(circleArr[0]);
 
 	// Should Make this an enum instead?
-	window.setFramerateLimit(60);
+	window.setFramerateLimit(240);
 	srand(time(0));
 
 	// Generate the different size circles
@@ -190,6 +193,9 @@ int main() {
 	*/
 	while (window.isOpen())
 	{
+		// Gets the elapsed time since the clock was started and restarts the clock
+		dt = clock.restart().asSeconds();
+
 		while (const std::optional event = window.pollEvent()) {
 			if (event->is<sf::Event::Closed>()) {
 				window.close();
@@ -203,7 +209,7 @@ int main() {
 			float windowWidth = window.getSize().x;
 			float windowHeight = window.getSize().y;
 
-			circle->update(&window, circleArr, circleArrSize);
+			circle->update(&window, circleArr, circleArrSize, dt);
 
 			sf::CircleShape leftMarker = sf::CircleShape(5.f);
 			leftMarker.setPosition({ circle->getPosition().x, circle->getPosition().y + (circle->getRadius()) });
