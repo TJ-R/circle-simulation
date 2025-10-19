@@ -35,6 +35,14 @@ class Ball : public sf::CircleShape {
 	using sf::CircleShape::CircleShape;
 
 	public: 
+		void setId(int id) {
+			this->id = id;
+		}
+
+		int getId() {
+			return this->id;
+		}
+
 		void createRandomBall(sf::Vector2u windowSize) {
 
 			sf::Color colors[7] = { sf::Color::White, sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Yellow, sf::Color::Magenta, sf::Color::Cyan };
@@ -102,69 +110,51 @@ class Ball : public sf::CircleShape {
 			}
 		}
 
-		void update(sf::RenderWindow* window, Ball* ballArr[], int ballArrSize, float dt) {
+		void update(sf::RenderWindow* window, Ball* ballArr, int ballArrSize, float dt) {
 			float currentX = this->getPosition().x;
 			float currentY = this->getPosition().y;
 			
 			this->checkBorderCollision(window);
 
+
 			// TODO update collision between balls	
+			// There has to be a better way to loop through this rather than checking every ball against every other ball to determine collisions
+			// and responding
+
+			for (int i = 0; i < ballArrSize; ++i) {
+				// skip ball if it is itself
+				if (this->getId() == ballArr[i].getId()) {
+					continue;
+				}
+
+				Ball b2 = ballArr[i];
+
+				//First check if collision is even going to happen
+				float b1Radius = this->getRadius();
+				float b2Radius = b2.getRadius();
+
+				sf::Vector2f b1Center = this->getPosition() - this->getGeometricCenter();
+				sf::Vector2f b2Center = b2.getPosition() - b2.getGeometricCenter();
+
+				// Get Eucldiean distance between the two centers sqrt( (x2 - x1)^2 + (y2 - y1)^2 )
+				float sqrX = pow(b2Center.x - b1Center.x, 2);
+				float sqrY = pow(b2Center.y - b1Center.y, 2);
+				float dist = sqrt(sqrX + sqrY);
+
+				if (dist <= b1Radius + b2Radius) {
+					std::cout << "Collision Detected" << std::endl;
+					// TODO Handle the particle collision response here
+				}
+			}
 
 			this->move(this->getMovementVector() * dt);
 			this->AABB_Collider.move(this->getMovementVector() * dt);
-
-			
-			//bool collision = false;
-			//// Colliding with both directions
-			//if ((currentX < 0 || currentX > window->getSize().x - (2 * this->getRadius()))
-			//	&& (currentY < 0 || currentY > window->getSize().y - (2 * this->getRadius()))) {
-			//	// Invert the speeds and move opposite direction
-			//	this->setMovementVector(-this->getMovementVector());
-			//	this->move(this->getMovementVector());
-			//	this->AABB_Collider.move(this->getMovementVector());
-			//}
-			//else if (currentX < 0 || currentX > window->getSize().x - (2 * this->getRadius())) {
-			//	// Invert just the x direction
-			//	this->setMovementVector({ -this->getMovementVector().x, this->getMovementVector().y });
-			//	this->move(this->getMovementVector());
-			//	this->AABB_Collider.move(this->getMovementVector());
-			//}
-			//else if (currentY < 0 || currentY > window->getSize().y - (2 * this->getRadius())) {
-			//	// Invert just the y direction
-			//	this->setMovementVector({ this->getMovementVector().x, -this->getMovementVector().y });
-			//	this->move(this->getMovementVector());
-			//	this->AABB_Collider.move(this->getMovementVector());
-			//}
-			//else {
-			//	this->move(this->getMovementVector());
-			//	this->AABB_Collider.move(this->getMovementVector());
-			//}
-			//else {
-
-			//	for (int i = 0; i < ballArrSize; ++i) {
-			//		if (ballArr[i] == this) {
-			//			continue;
-			//		}
-
-			//		collision = checkAABBCollision(ballArr[i]->getAABBCollider(), this->getAABBCollider());
-			//		if (collision) {
-			//			break;
-			//		}
-			//	}
-			//}
-
-			//// Set object precollision with inverse vector (with twice the power)
-			//// Want to come up with a better system but this will work for now
-			//if (collision) {
-			//	this->setMovementVector(-this->getMovementVector());
-			//	this->move({ this->getMovementVector().x * 2, this->getMovementVector().y * 2 });
-			//	collision = false;
-			//}
 		}
 
 	private: 
 		sf::Vector2f movementVector;
 		sf::RectangleShape AABB_Collider;
+		int id;
 };
 
 using namespace std;
@@ -175,7 +165,7 @@ int main() {
 	float dt = clock.restart().asSeconds();
 	float speed = 200.f;
 
-	Ball* circleArr[6];
+	Ball circleArr[2];
 	int circleArrSize = sizeof(circleArr) / sizeof(circleArr[0]);
 
 	// Should Make this an enum instead?
@@ -184,8 +174,9 @@ int main() {
 
 	// Generate the different size circles
 	for (int i = 0; i < circleArrSize; i++) {
-		Ball* ball = new Ball(0.f);
-		ball->createRandomBall(window.getSize());
+		Ball ball = Ball(0.f);
+		ball.createRandomBall(window.getSize());
+		ball.setId(i);
 		circleArr[i] = ball;
 	}
 	/*
@@ -204,31 +195,31 @@ int main() {
 
 		window.clear(sf::Color::Black);
 
-		for (Ball* circle : circleArr) {
+		for (Ball &circle : circleArr) {
 			
 			float windowWidth = window.getSize().x;
 			float windowHeight = window.getSize().y;
 
-			circle->update(&window, circleArr, circleArrSize, dt);
+			circle.update(&window, circleArr, circleArrSize, dt);
 
 			sf::CircleShape leftMarker = sf::CircleShape(5.f);
-			leftMarker.setPosition({ circle->getPosition().x, circle->getPosition().y + (circle->getRadius()) });
+			leftMarker.setPosition({ circle.getPosition().x, circle.getPosition().y + (circle.getRadius()) });
 			leftMarker.setPosition(leftMarker.getPosition() - leftMarker.getGeometricCenter());
 
 			sf::CircleShape rightMarker = sf::CircleShape(5.f);
-			rightMarker.setPosition({ circle->getPosition().x + (circle->getRadius() * 2), circle->getPosition().y + circle->getRadius()});
+			rightMarker.setPosition({ circle.getPosition().x + (circle.getRadius() * 2), circle.getPosition().y + circle.getRadius()});
 			rightMarker.setPosition(rightMarker.getPosition() - rightMarker.getGeometricCenter());
 
 			sf::CircleShape topMarker = sf::CircleShape(5.f);
-			topMarker.setPosition({ circle->getPosition().x + circle->getRadius(), circle->getPosition().y });
+			topMarker.setPosition({ circle.getPosition().x + circle.getRadius(), circle.getPosition().y });
 			topMarker.setPosition(topMarker.getPosition() - topMarker.getGeometricCenter());
 
 			sf::CircleShape bottomMarker = sf::CircleShape(5.f);
-			bottomMarker.setPosition({ circle->getPosition().x + circle->getRadius(), circle->getPosition().y + (circle->getRadius() * 2) });
+			bottomMarker.setPosition({ circle.getPosition().x + circle.getRadius(), circle.getPosition().y + (circle.getRadius() * 2) });
 			bottomMarker.setPosition(bottomMarker.getPosition() - bottomMarker.getGeometricCenter());
 
-			window.draw(*circle);
-			window.draw(circle->getAABBCollider());
+			window.draw(circle);
+			window.draw(circle.getAABBCollider());
 			window.draw(leftMarker);
 			window.draw(rightMarker);
 			window.draw(topMarker);
