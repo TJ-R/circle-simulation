@@ -110,12 +110,74 @@ class Ball : public sf::CircleShape {
 			}
 		}
 
-		void update(sf::RenderWindow* window, Ball* ballArr, int ballArrSize, float dt) {
+		bool checkParticleCollision(Ball* ball) {
+
+				//First check if collision is even going to happen
+				float b1Radius = this->getRadius();
+				float b2Radius = ball->getRadius();
+
+				sf::Vector2f b1Center = this->getPosition() - this->getGeometricCenter();
+				sf::Vector2f b2Center = ball->getPosition() - ball->getGeometricCenter();
+
+				// Get Eucldiean distance between the two centers sqrt( (x2 - x1)^2 + (y2 - y1)^2 )
+				float sqrX = pow(b2Center.x - b1Center.x, 2);
+				float sqrY = pow(b2Center.y - b1Center.y, 2);
+				float dist = sqrt(sqrX + sqrY);
+
+				if (dist <= b1Radius + b2Radius) {
+					std::cout << "Collision Detected" << std::endl;
+					return true;
+				}
+
+				return false;
+		}
+
+		void resolveParticleCollision(Ball* ball) {
+			// Following https://www.vobarian.com/collisions/2dcollisions2.pdf
+			
+			sf::Vector2f normalVec = sf::Vector2f(ball->getPosition().x - this->getPosition().x, ball->getPosition().y - this->getPosition().y);
+
+			sf::Vector2f unitNormalVec = normalVec.normalized(); // should be the unit normal
+			sf::Vector2f unitTangentVec = sf::Vector2f(-unitNormalVec.y, unitNormalVec.x);
+			
+			sf::Vector2f b1VelVec = this->getMovementVector();
+			sf::Vector2f b2VelVec = ball->getMovementVector();
+			
+			float nV1 = unitNormalVec.dot(b1VelVec);  // normal velocity
+			float tV1 = unitTangentVec.dot(b1VelVec); // tangental velocity
+
+			float nV2 = unitNormalVec.dot(b2VelVec);  // normal velocity
+			float tV2 = unitTangentVec.dot(b2VelVec); // tangental velocity
+
+			// tangental velocity after collision is same as before since no force in the tangental direction
+			
+			// normal velcoity after collision assuming mass of each ball is 1 can update this to use the balls mass
+			// if added later
+			float m1 = 1;
+			float m2 = 1;
+
+			float nPrimeV1 = (nV1 * (m1 - m2) + 2 * m2 * nV2) / (m1 + m2);
+			float nPrimeV2 = (nV2 * (m2 - m1) + 2 * m1 * nV1) / (m1 + m2);
+
+			sf::Vector2f nPrimeVec1 = nPrimeV1 * unitNormalVec;
+			sf::Vector2f tPrimeVec1 = tV1 * unitTangentVec;
+
+			sf::Vector2f nPrimeVec2 = nPrimeV2 * unitNormalVec;
+			sf::Vector2f tPrimeVec2 = tV2 * unitTangentVec;
+
+			sf::Vector2f primeV1Vec = nPrimeVec1 + tPrimeVec1;
+			sf::Vector2f primeV2Vec = nPrimeVec2 + tPrimeVec2;
+
+			this->setMovementVector(primeV1Vec);
+			// Not setting passed in ball movement vec for now
+		}
+
+		void handleCollisions (sf::RenderWindow* window, Ball* ballArr, int ballArrSize) {
 			float currentX = this->getPosition().x;
+;
 			float currentY = this->getPosition().y;
 			
 			this->checkBorderCollision(window);
-
 
 			// TODO update collision between balls	
 			// There has to be a better way to loop through this rather than checking every ball against every other ball to determine collisions
@@ -127,26 +189,13 @@ class Ball : public sf::CircleShape {
 					continue;
 				}
 
-				Ball b2 = ballArr[i];
-
-				//First check if collision is even going to happen
-				float b1Radius = this->getRadius();
-				float b2Radius = b2.getRadius();
-
-				sf::Vector2f b1Center = this->getPosition() - this->getGeometricCenter();
-				sf::Vector2f b2Center = b2.getPosition() - b2.getGeometricCenter();
-
-				// Get Eucldiean distance between the two centers sqrt( (x2 - x1)^2 + (y2 - y1)^2 )
-				float sqrX = pow(b2Center.x - b1Center.x, 2);
-				float sqrY = pow(b2Center.y - b1Center.y, 2);
-				float dist = sqrt(sqrX + sqrY);
-
-				if (dist <= b1Radius + b2Radius) {
-					std::cout << "Collision Detected" << std::endl;
-					// TODO Handle the particle collision response here
+				if (this->checkParticleCollision(&ballArr[i])) {
+					this->resolveParticleCollision(&ballArr[i]);
 				}
 			}
+		}
 
+		void update(float dt) {
 			this->move(this->getMovementVector() * dt);
 			this->AABB_Collider.move(this->getMovementVector() * dt);
 		}
@@ -195,12 +244,20 @@ int main() {
 
 		window.clear(sf::Color::Black);
 
-		for (Ball &circle : circleArr) {
-			
+		// Does not seem very efficient to do this loop twice scaling wise
+
+		// TODO See if there is a way to just do this event loop once per object effectively
+		for (Ball& circle : circleArr) {
+
 			float windowWidth = window.getSize().x;
 			float windowHeight = window.getSize().y;
 
-			circle.update(&window, circleArr, circleArrSize, dt);
+			// checkCollisions for each ball and adjust the movement vector appopriately 
+			circle.handleCollisions(&window, circleArr, circleArrSize);
+		}
+
+		for (Ball& circle : circleArr) {
+			circle.update(dt);
 
 			sf::CircleShape leftMarker = sf::CircleShape(5.f);
 			leftMarker.setPosition({ circle.getPosition().x, circle.getPosition().y + (circle.getRadius()) });
