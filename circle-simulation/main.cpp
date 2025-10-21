@@ -43,6 +43,7 @@ class Ball : public sf::CircleShape {
 			return this->id;
 		}
 
+		// TODO FIX BALLS SPAWNING OUTSIDE OF WINDOW
 		void createRandomBall(sf::Vector2u windowSize) {
 
 			sf::Color colors[7] = { sf::Color::White, sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Yellow, sf::Color::Magenta, sf::Color::Cyan };
@@ -56,8 +57,8 @@ class Ball : public sf::CircleShape {
 			this->setRadius(static_cast<float>(radius));
 
 			// Random position
-			float x = static_cast<float>(radius + (rand() % (windowSize.x - (radius*2) + 1)));
-			float y = static_cast<float>(radius + (rand() % (windowSize.y - (radius*2) + 1)));
+			float x = static_cast<float>(1 + (rand() % (windowSize.x - 1 + 1)));
+			float y = static_cast<float>(1 + (rand() % (windowSize.y - 1 + 1)));
 			this->setPosition(sf::Vector2f(x, y));
 
 			// Create AABB Collider Box
@@ -132,7 +133,7 @@ class Ball : public sf::CircleShape {
 				return false;
 		}
 
-		void resolveParticleCollision(Ball* ball) {
+		void resolveParticleCollision(Ball* ball, float dt) {
 			// Following https://www.vobarian.com/collisions/2dcollisions2.pdf
 			
 			sf::Vector2f normalVec = sf::Vector2f(ball->getPosition().x - this->getPosition().x, ball->getPosition().y - this->getPosition().y);
@@ -169,10 +170,18 @@ class Ball : public sf::CircleShape {
 			sf::Vector2f primeV2Vec = nPrimeVec2 + tPrimeVec2;
 
 			this->setMovementVector(primeV1Vec);
-			// Not setting passed in ball movement vec for now
+			ball->setMovementVector(primeV2Vec);
+
+			// Also going to move them away from each other till collison is gone
+			while (this->checkParticleCollision(ball)) {
+				this->move(this->getMovementVector() * dt);
+				this->getAABBCollider().move(this->getMovementVector() * dt);
+				ball->move(ball->getMovementVector() * dt);
+				ball->getAABBCollider().move(ball->getMovementVector() * dt);
+			}
 		}
 
-		void handleCollisions (sf::RenderWindow* window, Ball* ballArr, int ballArrSize) {
+		void handleCollisions (sf::RenderWindow* window, Ball* ballArr, int ballArrSize, float dt) {
 			float currentX = this->getPosition().x;
 ;
 			float currentY = this->getPosition().y;
@@ -190,7 +199,7 @@ class Ball : public sf::CircleShape {
 				}
 
 				if (this->checkParticleCollision(&ballArr[i])) {
-					this->resolveParticleCollision(&ballArr[i]);
+					this->resolveParticleCollision(&ballArr[i], dt);
 				}
 			}
 		}
@@ -214,7 +223,7 @@ int main() {
 	float dt = clock.restart().asSeconds();
 	float speed = 200.f;
 
-	Ball circleArr[2];
+	Ball circleArr[100];
 	int circleArrSize = sizeof(circleArr) / sizeof(circleArr[0]);
 
 	// Should Make this an enum instead?
@@ -253,7 +262,7 @@ int main() {
 			float windowHeight = window.getSize().y;
 
 			// checkCollisions for each ball and adjust the movement vector appopriately 
-			circle.handleCollisions(&window, circleArr, circleArrSize);
+			circle.handleCollisions(&window, circleArr, circleArrSize, dt);
 		}
 
 		for (Ball& circle : circleArr) {
