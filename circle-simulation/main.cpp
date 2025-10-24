@@ -32,11 +32,15 @@ bool checkAABBCollision(sf::RectangleShape s1, sf::RectangleShape s2) {
 }
 
 class Ball : public sf::CircleShape {
-	using sf::CircleShape::CircleShape;
-
 	public: 
-		void setId(int id) {
-			this->id = id;
+		Ball() {}
+
+		Ball(int newId, float radius) : CircleShape(radius) {
+			this->id = newId;
+		}
+
+		void setId(int newId) {
+			this->id = newId;
 		}
 
 		int getId() {
@@ -121,9 +125,9 @@ class Ball : public sf::CircleShape {
 				sf::Vector2f b2Center = ball->getPosition() - ball->getGeometricCenter();
 
 				// Get Eucldiean distance between the two centers sqrt( (x2 - x1)^2 + (y2 - y1)^2 )
-				float sqrX = pow(b2Center.x - b1Center.x, 2);
-				float sqrY = pow(b2Center.y - b1Center.y, 2);
-				float dist = sqrt(sqrX + sqrY);
+				double sqrX = pow(b2Center.x - b1Center.x, 2);
+				double sqrY = pow(b2Center.y - b1Center.y, 2);
+				double dist = sqrt(sqrX + sqrY);
 
 				if (dist <= b1Radius + b2Radius) {
 					std::cout << "Collision Detected" << std::endl;
@@ -182,12 +186,7 @@ class Ball : public sf::CircleShape {
 		}
 
 		void handleCollisions (sf::RenderWindow* window, Ball* ballArr, int ballArrSize, float dt) {
-			float currentX = this->getPosition().x;
-;
-			float currentY = this->getPosition().y;
-			
 			this->checkBorderCollision(window);
-
 			// TODO update collision between balls	
 			// There has to be a better way to loop through this rather than checking every ball against every other ball to determine collisions
 			// and responding
@@ -212,7 +211,7 @@ class Ball : public sf::CircleShape {
 	private: 
 		sf::Vector2f movementVector;
 		sf::RectangleShape AABB_Collider;
-		int id;
+		int id{};
 };
 
 using namespace std;
@@ -221,20 +220,19 @@ int main() {
 	sf::Clock clock;
 
 	float dt = clock.restart().asSeconds();
-	float speed = 200.f;
 
-	Ball circleArr[100];
-	int circleArrSize = sizeof(circleArr) / sizeof(circleArr[0]);
+	const int circleArrSize = 100;
+	Ball circleArr[circleArrSize];
 
 	// Should Make this an enum instead?
 	window.setFramerateLimit(240);
-	srand(time(0));
+	srand(unsigned int(time(0)));
+
 
 	// Generate the different size circles
 	for (int i = 0; i < circleArrSize; i++) {
-		Ball ball = Ball(0.f);
+		Ball ball = Ball(i, 0.f);
 		ball.createRandomBall(window.getSize());
-		ball.setId(i);
 		circleArr[i] = ball;
 	}
 	/*
@@ -256,36 +254,32 @@ int main() {
 		// Does not seem very efficient to do this loop twice scaling wise
 
 		// TODO See if there is a way to just do this event loop once per object effectively
-		for (Ball& circle : circleArr) {
-
-			float windowWidth = window.getSize().x;
-			float windowHeight = window.getSize().y;
-
+		for (int i = 0; i < circleArrSize; ++i) {
 			// checkCollisions for each ball and adjust the movement vector appopriately 
-			circle.handleCollisions(&window, circleArr, circleArrSize, dt);
+			circleArr[i].handleCollisions(&window, circleArr, circleArrSize, dt);
 		}
 
-		for (Ball& circle : circleArr) {
-			circle.update(dt);
+		for (int i = 0; i < circleArrSize; ++i) {
+			circleArr[i].update(dt);
 
 			sf::CircleShape leftMarker = sf::CircleShape(5.f);
-			leftMarker.setPosition({ circle.getPosition().x, circle.getPosition().y + (circle.getRadius()) });
+			leftMarker.setPosition({ circleArr[i].getPosition().x, circleArr[i].getPosition().y + (circleArr[i].getRadius())});
 			leftMarker.setPosition(leftMarker.getPosition() - leftMarker.getGeometricCenter());
 
 			sf::CircleShape rightMarker = sf::CircleShape(5.f);
-			rightMarker.setPosition({ circle.getPosition().x + (circle.getRadius() * 2), circle.getPosition().y + circle.getRadius()});
+			rightMarker.setPosition({ circleArr[i].getPosition().x + (circleArr[i].getRadius() * 2), circleArr[i].getPosition().y + circleArr[i].getRadius()});
 			rightMarker.setPosition(rightMarker.getPosition() - rightMarker.getGeometricCenter());
 
 			sf::CircleShape topMarker = sf::CircleShape(5.f);
-			topMarker.setPosition({ circle.getPosition().x + circle.getRadius(), circle.getPosition().y });
+			topMarker.setPosition({ circleArr[i].getPosition().x + circleArr[i].getRadius(), circleArr[i].getPosition().y});
 			topMarker.setPosition(topMarker.getPosition() - topMarker.getGeometricCenter());
 
 			sf::CircleShape bottomMarker = sf::CircleShape(5.f);
-			bottomMarker.setPosition({ circle.getPosition().x + circle.getRadius(), circle.getPosition().y + (circle.getRadius() * 2) });
+			bottomMarker.setPosition({ circleArr[i].getPosition().x + circleArr[i].getRadius(), circleArr[i].getPosition().y + (circleArr[i].getRadius() * 2)});
 			bottomMarker.setPosition(bottomMarker.getPosition() - bottomMarker.getGeometricCenter());
 
-			window.draw(circle);
-			window.draw(circle.getAABBCollider());
+			window.draw(circleArr[i]);
+			window.draw(circleArr[i].getAABBCollider());
 			window.draw(leftMarker);
 			window.draw(rightMarker);
 			window.draw(topMarker);
