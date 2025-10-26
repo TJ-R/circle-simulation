@@ -47,22 +47,29 @@ class Ball : public sf::CircleShape {
 			return this->id;
 		}
 
-		// TODO FIX BALLS SPAWNING OUTSIDE OF WINDOW
+		// TODO How to handle the initial collision of balls spawing on top of one another
+		// causes tunneling outside of the border of the window and then they can't reenter
+		// might have to change when the balls are moved during a collision
 		void createRandomBall(sf::Vector2u windowSize) {
 
 			sf::Color colors[7] = { sf::Color::White, sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Yellow, sf::Color::Magenta, sf::Color::Cyan };
+
+			// Random math works
+			// min + ((srand) % (max - min + 1));
 
 			// Random Choose color 0 - 6
 			int colorIndex = 0 + (rand() % (6 - 0 + 1));
 			this->setFillColor(colors[colorIndex]);
 
-			// Random Choose radius 49.f - 50.f
-			int radius = 49 + (rand() & (50 - 49 + 1));
+			// Random Choose radius 20.f - 40.f
+			int radius = 20 + (rand() & (40 - 20 + 1));
 			this->setRadius(static_cast<float>(radius));
 
 			// Random position
-			float x = static_cast<float>(1 + (rand() % (windowSize.x - 1 + 1)));
-			float y = static_cast<float>(1 + (rand() % (windowSize.y - 1 + 1)));
+			// I want the postions to be maximum and minimums 100pxs away from the edges of the screen
+			float x{ static_cast<float>(200 + (rand() % ((windowSize.x - 200) - 200 + 1))) };
+			float y{ static_cast<float>(200 + (rand() % ((windowSize.y - 200) - 200 + 1))) };
+
 			this->setPosition(sf::Vector2f(x, y));
 
 			// Create AABB Collider Box
@@ -130,7 +137,6 @@ class Ball : public sf::CircleShape {
 				double dist = sqrt(sqrX + sqrY);
 
 				if (dist <= b1Radius + b2Radius) {
-					std::cout << "Collision Detected" << std::endl;
 					return true;
 				}
 
@@ -216,16 +222,15 @@ class Ball : public sf::CircleShape {
 
 using namespace std;
 int main() {
-	sf::RenderWindow window(sf::VideoMode({ 1200, 900 }), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode({ 1920, 1080 }), "SFML works!");
 	sf::Clock clock;
 
 	float dt = clock.restart().asSeconds();
 
-	const int circleArrSize = 100;
+	const int circleArrSize = 500;
 	Ball circleArr[circleArrSize];
 
-	// Should Make this an enum instead?
-	window.setFramerateLimit(240);
+	//window.setFramerateLimit(240);
 	srand(unsigned int(time(0)));
 
 
@@ -235,13 +240,24 @@ int main() {
 		ball.createRandomBall(window.getSize());
 		circleArr[i] = ball;
 	}
+
 	/*
 		REFACTOR each loop of for circle make sure we are getting reference to collider so that we modify the original
 	*/
+	float totalTime{ 0 }; // This is direct-list-initialization rather than copy-initialization
+	int fpsCount{ 0 };
 	while (window.isOpen())
 	{
+		if (totalTime >= 1)
+		{
+			std::cout << "FPS: " << fpsCount << "\n";
+			fpsCount = 0;
+			totalTime = 0;
+		}
 		// Gets the elapsed time since the clock was started and restarts the clock
 		dt = clock.restart().asSeconds();
+		totalTime += dt;
+		fpsCount += 1;
 
 		while (const std::optional event = window.pollEvent()) {
 			if (event->is<sf::Event::Closed>()) {
