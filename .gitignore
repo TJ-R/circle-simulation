@@ -468,3 +468,5 @@ FodyWeavers.xsd
 
 # debug information files
 *.dwo
+
+/build

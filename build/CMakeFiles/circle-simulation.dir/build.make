@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tj/workspace/github.com/TJ-R/circle-simulation
+CMAKE_SOURCE_DIR = /home/tj/workspace/github.com/tj-r/circle-simulation
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tj/workspace/github.com/TJ-R/circle-simulation/build
+CMAKE_BINARY_DIR = /home/tj/workspace/github.com/tj-r/circle-simulation/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/circle-simulation.dir/depend.make
@@ -73,32 +73,32 @@ CMakeFiles/circle-simulation.dir/codegen:
 .PHONY : CMakeFiles/circle-simulation.dir/codegen
 
 CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o: CMakeFiles/circle-simulation.dir/flags.make
-CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o: /home/tj/workspace/github.com/TJ-R/circle-simulation/circle-simulation/ball.cpp
+CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o: /home/tj/workspace/github.com/tj-r/circle-simulation/circle-simulation/ball.cpp
 CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o: CMakeFiles/circle-simulation.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tj/workspace/github.com/TJ-R/circle-simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o -MF CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o.d -o CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o -c /home/tj/workspace/github.com/TJ-R/circle-simulation/circle-simulation/ball.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tj/workspace/github.com/tj-r/circle-simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o -MF CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o.d -o CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.o -c /home/tj/workspace/github.com/tj-r/circle-simulation/circle-simulation/ball.cpp
 
 CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tj/workspace/github.com/TJ-R/circle-simulation/circle-simulation/ball.cpp > CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tj/workspace/github.com/tj-r/circle-simulation/circle-simulation/ball.cpp > CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.i
 
 CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tj/workspace/github.com/TJ-R/circle-simulation/circle-simulation/ball.cpp -o CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tj/workspace/github.com/tj-r/circle-simulation/circle-simulation/ball.cpp -o CMakeFiles/circle-simulation.dir/circle-simulation/ball.cpp.s
 
 CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o: CMakeFiles/circle-simulation.dir/flags.make
-CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o: /home/tj/workspace/github.com/TJ-R/circle-simulation/circle-simulation/main.cpp
+CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o: /home/tj/workspace/github.com/tj-r/circle-simulation/circle-simulation/main.cpp
 CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o: CMakeFiles/circle-simulation.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tj/workspace/github.com/TJ-R/circle-simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o -MF CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o.d -o CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o -c /home/tj/workspace/github.com/TJ-R/circle-simulation/circle-simulation/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tj/workspace/github.com/tj-r/circle-simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o -MF CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o.d -o CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.o -c /home/tj/workspace/github.com/tj-r/circle-simulation/circle-simulation/main.cpp
 
 CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tj/workspace/github.com/TJ-R/circle-simulation/circle-simulation/main.cpp > CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tj/workspace/github.com/tj-r/circle-simulation/circle-simulation/main.cpp > CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.i
 
 CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tj/workspace/github.com/TJ-R/circle-simulation/circle-simulation/main.cpp -o CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tj/workspace/github.com/tj-r/circle-simulation/circle-simulation/main.cpp -o CMakeFiles/circle-simulation.dir/circle-simulation/main.cpp.s
 
 # Object files for target circle-simulation
 circle__simulation_OBJECTS = \
@@ -118,7 +118,7 @@ circle-simulation: /usr/lib/libsfml-audio.so.3.0.2
 circle-simulation: /usr/lib/libsfml-network.so.3.0.2
 circle-simulation: /usr/lib/libsfml-system.so.3.0.2
 circle-simulation: CMakeFiles/circle-simulation.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/tj/workspace/github.com/TJ-R/circle-simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable circle-simulation"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/tj/workspace/github.com/tj-r/circle-simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable circle-simulation"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/circle-simulation.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -130,6 +130,6 @@ CMakeFiles/circle-simulation.dir/clean:
 .PHONY : CMakeFiles/circle-simulation.dir/clean
 
 CMakeFiles/circle-simulation.dir/depend:
-	cd /home/tj/workspace/github.com/TJ-R/circle-simulation/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tj/workspace/github.com/TJ-R/circle-simulation /home/tj/workspace/github.com/TJ-R/circle-simulation /home/tj/workspace/github.com/TJ-R/circle-simulation/build /home/tj/workspace/github.com/TJ-R/circle-simulation/build /home/tj/workspace/github.com/TJ-R/circle-simulation/build/CMakeFiles/circle-simulation.dir/DependInfo.cmake "--color=$(COLOR)" circle-simulation
+	cd /home/tj/workspace/github.com/tj-r/circle-simulation/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tj/workspace/github.com/tj-r/circle-simulation /home/tj/workspace/github.com/tj-r/circle-simulation /home/tj/workspace/github.com/tj-r/circle-simulation/build /home/tj/workspace/github.com/tj-r/circle-simulation/build /home/tj/workspace/github.com/tj-r/circle-simulation/build/CMakeFiles/circle-simulation.dir/DependInfo.cmake "--color=$(COLOR)" circle-simulation
 .PHONY : CMakeFiles/circle-simulation.dir/depend
 

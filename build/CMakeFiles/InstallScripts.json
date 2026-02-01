@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/home/tj/workspace/github.com/TJ-R/circle-simulation/build/cmake_install.cmake"
+		"/home/tj/workspace/github.com/tj-r/circle-simulation/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

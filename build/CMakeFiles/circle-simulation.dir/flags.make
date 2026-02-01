@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/tj/workspace/github.com/TJ-R/circle-simulation/circle-simulation
+CXX_INCLUDES = -I/home/tj/workspace/github.com/tj-r/circle-simulation/circle-simulation
 
 CXX_FLAGS = -std=gnu++17
 

@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # This should ensure /usr is first
 # place to check since it was finding
 # the static library I have for windows
+# THIS WILL ONLY WORK FOR LINUX AND 
+# NEEDS SFML INSTALLED THROUGH package manager
 set(CMAKE_PREFIX_PATH "/usr")
 
 find_package(SFML 3 REQUIRED COMPONENTS

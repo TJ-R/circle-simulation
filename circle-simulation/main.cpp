@@ -9,8 +9,8 @@ enum aabbCollisionDirection { TOP, RIGHT, BOTTOM, LEFT };
 bool checkAABBCollision(sf::RectangleShape, sf::RectangleShape);
 
 int main() {
-  unsigned int windowX{1920};
-  unsigned int windowY{1080};
+  unsigned int windowX{1280};
+  unsigned int windowY{720};
   sf::RenderWindow window(sf::VideoMode({windowX, windowY}),
                           "Circle_Simulation");
   sf::Clock clock;
