@@ -17,40 +17,21 @@ int main() {
 
   float dt = clock.restart().asSeconds();
 
-  const int circleArrSize = 2;
-  Ball circleArr[circleArrSize];
-
   window.setFramerateLimit(240);
   unsigned int unsignedRandom = static_cast<unsigned int>(time(0));
   srand(unsignedRandom);
 
-  // Generate the different size circles
   float currentWindowX = 200;
   float currentWindowY = 200;
-  for (int i = 0; i < circleArrSize; i++) {
-    Ball ball = Ball(i, 0.f);
-    ball.createRandomBall(currentWindowX, currentWindowY);
-    circleArr[i] = ball;
 
-    if (currentWindowX + 80 >= windowX - 200) {
-      currentWindowX = 200;
-      currentWindowY += 80;
+  Ball ball = Ball(1, 0.f);
+  ball.createRandomBall(currentWindowX, currentWindowY);
 
-      if (currentWindowY + 80 >= windowY - 200) {
-        break;
-      }
-    } else {
-      currentWindowX += 80;
-    }
-  }
-
-  /*
-          REFACTOR each loop of for circle make sure we are getting reference to
-     collider so that we modify the original
-  */
   float totalTime{
       0}; // This is direct-list-initialization rather than copy-initialization
   int fpsCount{0};
+
+  // Event Loop
   while (window.isOpen()) {
     if (totalTime >= 1) {
       std::cout << "FPS: " << fpsCount << "\n";
@@ -70,53 +51,10 @@ int main() {
 
     window.clear(sf::Color::Black);
 
-    // Does not seem very efficient to do this loop twice scaling wise
+    ball.handleCollisions(&window, dt);
+    ball.update(dt);
 
-    // TODO See if there is a way to just do this event loop once per object
-    // effectively
-    for (int i = 0; i < circleArrSize; ++i) {
-      // checkCollisions for each ball and adjust the movement vector
-      // appopriately
-      circleArr[i].handleCollisions(&window, circleArr, circleArrSize, dt);
-    }
-
-    for (int i = 0; i < circleArrSize; ++i) {
-      circleArr[i].update(dt);
-
-      // sf::CircleShape leftMarker = sf::CircleShape(5.f);
-      // leftMarker.setPosition({ circleArr[i].getPosition().x,
-      // circleArr[i].getPosition().y + (circleArr[i].getRadius())});
-      // leftMarker.setPosition(leftMarker.getPosition() -
-      // leftMarker.getGeometricCenter());
-
-      // sf::CircleShape rightMarker = sf::CircleShape(5.f);
-      // rightMarker.setPosition({ circleArr[i].getPosition().x +
-      // (circleArr[i].getRadius() * 2), circleArr[i].getPosition().y +
-      // circleArr[i].getRadius()});
-      // rightMarker.setPosition(rightMarker.getPosition() -
-      // rightMarker.getGeometricCenter());
-
-      // sf::CircleShape topMarker = sf::CircleShape(5.f);
-      // topMarker.setPosition({ circleArr[i].getPosition().x +
-      // circleArr[i].getRadius(), circleArr[i].getPosition().y});
-      // topMarker.setPosition(topMarker.getPosition() -
-      // topMarker.getGeometricCenter());
-
-      // sf::CircleShape bottomMarker = sf::CircleShape(5.f);
-      // bottomMarker.setPosition({ circleArr[i].getPosition().x +
-      // circleArr[i].getRadius(), circleArr[i].getPosition().y +
-      // (circleArr[i].getRadius() * 2)});
-      // bottomMarker.setPosition(bottomMarker.getPosition() -
-      // bottomMarker.getGeometricCenter());
-
-      window.draw(circleArr[i]);
-      // window.draw(circleArr[i].getAABBCollider());
-      // window.draw(leftMarker);
-      // window.draw(rightMarker);
-      // window.draw(topMarker);
-      // window.draw(bottomMarker);
-    }
-
+    window.draw(ball);
     window.display();
   }
 }

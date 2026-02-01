@@ -200,23 +200,8 @@ void Ball::resolveParticleCollision(Ball *ball, float dt) {
   }
 }
 
-void Ball::handleCollisions(sf::RenderWindow *window, Ball *ballArr,
-                            int ballArrSize, float dt) {
+void Ball::handleCollisions(sf::RenderWindow *window, float dt) {
   this->checkBorderCollision(window);
-  // TODO update collision between balls
-  // There has to be a better way to loop through this rather than checking
-  // every ball against every other ball to determine collisions and responding
-
-  for (int i = 0; i < ballArrSize; ++i) {
-    // skip ball if it is itself
-    if (this->getId() == ballArr[i].getId()) {
-      continue;
-    }
-
-    if (this->checkParticleCollision(&ballArr[i])) {
-      this->resolveParticleCollision(&ballArr[i], dt);
-    }
-  }
 }
 
 void Ball::update(float dt) {
