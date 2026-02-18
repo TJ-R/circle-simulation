@@ -1,7 +1,5 @@
 #include "ball.h"
 #include <SFML/Graphics.hpp>
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
 
 enum aabbCollisionDirection { TOP, RIGHT, BOTTOM, LEFT };
@@ -17,15 +15,12 @@ int main() {
 
   float dt = clock.restart().asSeconds();
 
-  window.setFramerateLimit(240);
-  unsigned int unsignedRandom = static_cast<unsigned int>(time(0));
-  srand(unsignedRandom);
+  window.setFramerateLimit(120);
 
   float currentWindowX = 200;
   float currentWindowY = 200;
 
-  Ball ball = Ball(1, 0.f);
-  ball.createRandomBall(currentWindowX, currentWindowY);
+  Ball ball = Ball(20.f, windowX, windowY, 0.8);
 
   float totalTime{
       0}; // This is direct-list-initialization rather than copy-initialization
@@ -51,10 +46,10 @@ int main() {
 
     window.clear(sf::Color::Black);
 
-    ball.handleCollisions(&window, dt);
-    ball.update(dt);
+    ball.update(&window, dt);
 
     window.draw(ball);
+    window.draw(ball.getAABBCollider());
     window.display();
   }
 }
