@@ -20,7 +20,11 @@ int main() {
     float currentWindowX = 200;
     float currentWindowY = 200;
 
-    Ball ball = Ball(20.f, windowX, windowY, 0.8, 10.f, 100.f);
+    std::vector<Ball> balls;
+
+    Ball ball = Ball(20.f, windowX, windowY, 0.8, -500.f, 1000.f);
+
+    balls.push_back(ball);
 
     float totalTime{0}; // This is direct-list-initialization rather than
                         // copy-initialization
@@ -42,15 +46,25 @@ int main() {
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
+            } else if (event->is<sf::Event::KeyPressed>()) {
+                const auto &keyPressed = event->getIf<sf::Event::KeyPressed>();
+
+                if (keyPressed->code == sf::Keyboard::Key::A) {
+                    // Add a ball;
+                    Ball ball =
+                        Ball(20.f, windowX, windowY, 0.8, -200.f, 600.f);
+                    balls.push_back(ball);
+                }
             }
         }
 
         window.clear(sf::Color::Black);
 
-        ball.update(&window, dt);
-
-        window.draw(ball);
-        window.draw(ball.getAABBCollider());
+        for (auto &ball : balls) {
+            ball.update(&window, dt);
+            window.draw(ball);
+            window.draw(ball.getAABBCollider());
+        }
         window.display();
     }
 }
